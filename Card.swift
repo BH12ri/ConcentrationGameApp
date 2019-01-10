@@ -15,6 +15,7 @@ struct Card : Hashable {
     }
     var isFaceUp = false
     var isMatched = false
+    var isTouched = 0
     private var identifier : Int
     private static var identifierNumber = 0
     

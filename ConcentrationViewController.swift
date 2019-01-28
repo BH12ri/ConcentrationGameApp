@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ConcentrationViewController: UIViewController {
     private var countLabel = ""
     private var gameThemeSelected = false
     private lazy var game = Concentration(numberOfPairOfCards: numberOfPairOfCards)
@@ -50,7 +50,7 @@ class ViewController: UIViewController {
     private func updateLabel(Label: String, Value : Int, LabelType : UILabel){
         let attributes : [NSAttributedString.Key : Any] = [
             .strokeWidth : 5.0,
-            .strokeColor : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            .strokeColor : #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
         ]
         let attributedString = NSAttributedString(string:"\(Label) \(Value)" , attributes: attributes)
         LabelType.attributedText = attributedString
@@ -78,53 +78,75 @@ class ViewController: UIViewController {
     }
     
     
-    // Function : Update View of Game during playing Concentration
+    // ---Function : Update View of Game during playing Concentration----
     private func updateViewFromModel(){
-        if gameThemeSelected{
+        //if gameThemeSelected{
+        if cardButtons != nil {
             for index in cardButtons.indices{
                 let button = cardButtons[index]
                 let card = game.cards[index]
                 if card.isFaceUp{
                     button.setTitle(emoji(for: card), for: UIControl.State.normal)
-                    button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                    button.backgroundColor = #colorLiteral(red: 0.4352941176, green: 0.4431372549, blue: 0.4745098039, alpha: 1)
                 }else{
                     button.setTitle("", for: UIControl.State.normal)
-                    button.backgroundColor = card.isMatched ?#colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                    button.backgroundColor = card.isMatched ?#colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
                 }
             }
-        }else{
-            gameThemeSelected = true
-            gameThemeCaseRandomSelect()
+            
+        }
+//        }else{
+//            gameThemeSelected = true
+//            gameThemeCaseRandomSelect()
+//
+//        }
+    }
+    
+    // -------EMOJI THEME SELECTION (assignment)-------
+//    private var theme : Theme! {
+//        didSet {
+//            implementTheme()
+//        }
+//    }
+//    private func gameThemeCaseRandomSelect(){
+//        print(gameThemeSelected)
+//        theme = Theme(rawValue: Theme.count.arc4random) ?? Theme.Halloween
+//    }
+//
+//    private func implementTheme() {
+//        emoji = [:]
+//        unusedEmojis = theme.emojiChoices
+//        updateViewFromModel()
+//
+//    }
+    
+//    ----Code for selection of the emojis to appear on cards---
+//    private var emoji = [Card:String]()
+//    private var unusedEmojis: String!
+//
+//    private func emoji(for card: Card) -> String {
+//        if emoji[card] == nil, unusedEmojis != nil {
+//            let randomStringIndex = unusedEmojis.index(unusedEmojis.startIndex, offsetBy: unusedEmojis.count.arc4random)
+//            emoji[card] = String(unusedEmojis.remove(at: randomStringIndex))
+//        }
+//        return emoji[card] ?? "?"
+//    }
+// -----Theme Selection using Multiple MVC Concept------
+    var theme: String?{
+        didSet {
+            emojiChoices = theme ?? ""
+            emoji = [:]
+            updateViewFromModel()
             
         }
     }
-    
-    // -------EMOJI THEME SELECTION-------
-    private var theme : Theme! {
-        didSet {
-            implementTheme()
-        }
-    }
-    private func gameThemeCaseRandomSelect(){
-        print(gameThemeSelected)
-        theme = Theme(rawValue: Theme.count.arc4random) ?? Theme.Halloween
-    }
-    
-    private func implementTheme() {
-        emoji = [:]
-        unusedEmojis = theme.emojiChoices
-        updateViewFromModel()
-        
-    }
-    
-    //Code for selection of the emojis to appear on cards
+    private var emojiChoices = "🐶🐣🐼🐙🦋🐳🐯🦁"
     private var emoji = [Card:String]()
-    private var unusedEmojis: String!
     
     private func emoji(for card: Card) -> String {
-        if emoji[card] == nil, unusedEmojis != nil {
-            let randomStringIndex = unusedEmojis.index(unusedEmojis.startIndex, offsetBy: unusedEmojis.count.arc4random)
-            emoji[card] = String(unusedEmojis.remove(at: randomStringIndex))
+        if emoji[card] == nil, emojiChoices.count > 0 {
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
         }
         return emoji[card] ?? "?"
     }

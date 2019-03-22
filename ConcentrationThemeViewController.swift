@@ -9,12 +9,11 @@
 import UIKit
 
 class ConcentrationThemeViewController: UIViewController, UISplitViewControllerDelegate {
-
     let themes = [
-        "Animals":"🐶🐣🐼🐙🦋🐳🐯🦁",
-        "Sports":"⚽️🏀🏈⚾️🎾🏐🏓🏑",
-        "Halloween":"🦇😱🙀😈🎃👻💀🧛‍♂️",]
-    
+        "Animals":"🐶🐣🐼🐙🦋🐳🐯🦁🐨🐝",
+        "Sports":"⚽️🏀🏈⚾️🎾🏐🏓🏑🥊⛳️",
+        "Halloween":"🦇😱🙀😈🎃👻💀🧛‍♂️👾☠️",]
+     
     // MARK: - Navigation
     
     override func awakeFromNib() {
@@ -50,10 +49,15 @@ class ConcentrationThemeViewController: UIViewController, UISplitViewControllerD
     }
         
     }
+    
     private var splitViewDetailViewController : ConcentrationViewController?{
         return splitViewController?.viewControllers.last as? ConcentrationViewController
     }
-    private var lastSeguedToConcentrationViewController: ConcentrationViewController?
+    
+    
+     var lastSeguedToConcentrationViewController: ConcentrationViewController?
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Choose Theme" {
                 if let themeName = (sender as? UIButton)?.currentTitle, let theme = themes[themeName]{

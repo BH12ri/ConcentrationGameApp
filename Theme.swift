@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Theme : Int, CaseIterable {
+enum Theme : String, CaseIterable {
     
     case Halloween
     case Animals
@@ -22,7 +22,7 @@ enum Theme : Int, CaseIterable {
         
     }
     
-    var emojiChoices: String {
+    var emojiChoice: String {
         switch(self) {
         case .Halloween:
             return "🦇😱🙀😈🎃👻💀🧛‍♂️"

@@ -14,10 +14,19 @@ class ConcentrationViewController: UIViewController {
     private lazy var game = Concentration(numberOfPairOfCards: numberOfPairOfCards)
     var numberOfPairOfCards: Int {
         get{
-            return (cardButtons.count+1)/2
+            return (visibleCardButtons.count+1)/2
         }
     }
     @IBOutlet private var cardButtons: [UIButton]!
+    
+    private var visibleCardButtons: [UIButton]!{
+        return cardButtons?.filter { !$0.superview!.isHidden }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateViewFromModel()
+    }
     
     // ------LABEL UPDATE AND DISPLAY-------
     private(set) var score = 0{
@@ -62,7 +71,7 @@ class ConcentrationViewController: UIViewController {
     // Funtion: When a card is touched to flip it over
     @IBAction private func touchCard(_ sender: UIButton) {
         flipCount += 1
-        let cardCount = cardButtons.index(of: sender)!
+        let cardCount = visibleCardButtons.index(of: sender)!
         game.chooseCard(at: cardCount)
         score = game.updateScoreValue()
         updateViewFromModel()
@@ -73,7 +82,7 @@ class ConcentrationViewController: UIViewController {
         game = Concentration(numberOfPairOfCards: numberOfPairOfCards)
         flipCount = 0
         score = 0
-        gameThemeSelected = false
+        //gameThemeSelected = false
         updateViewFromModel()
     }
     
@@ -81,9 +90,9 @@ class ConcentrationViewController: UIViewController {
     // ---Function : Update View of Game during playing Concentration----
     private func updateViewFromModel(){
         //if gameThemeSelected{
-        if cardButtons != nil {
-            for index in cardButtons.indices{
-                let button = cardButtons[index]
+        if visibleCardButtons != nil {
+            for index in visibleCardButtons.indices{
+                let button = visibleCardButtons[index]
                 let card = game.cards[index]
                 if card.isFaceUp{
                     button.setTitle(emoji(for: card), for: UIControl.State.normal)
@@ -142,11 +151,16 @@ class ConcentrationViewController: UIViewController {
     }
     private var emojiChoices = "🐶🐣🐼🐙🦋🐳🐯🦁"
     private var emoji = [Card:String]()
-    
+    var usedEmoji = ""
     private func emoji(for card: Card) -> String {
         if emoji[card] == nil, emojiChoices.count > 0 {
             let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
-            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
+            let emojiAtCurrentIndex = String(emojiChoices.remove(at: randomStringIndex))
+            usedEmoji = self.usedEmoji + emojiAtCurrentIndex
+            emoji[card] = emojiAtCurrentIndex
+        }
+        if emojiChoices.count == 0 {
+            emojiChoices = usedEmoji
         }
         return emoji[card] ?? "?"
     }
